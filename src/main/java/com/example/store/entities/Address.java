@@ -1,13 +1,6 @@
 package com.example.store.entities;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Column;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -29,9 +22,6 @@ public class Address {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "user_id")
-    private String user_id;
-
     @Column(name = "street")
     private String street;
 
@@ -44,7 +34,7 @@ public class Address {
     @Column(name = "zip")
     private String zip;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     @ToString.Exclude
     private User user;

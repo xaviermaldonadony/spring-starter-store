@@ -1,9 +1,8 @@
 package com.example.store;
 
-import com.example.store.entities.Address;
-import com.example.store.entities.Profile;
-import com.example.store.entities.Tag;
 import com.example.store.entities.User;
+import com.example.store.repositories.UserRepository;
+import com.example.store.services.UserService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -12,20 +11,11 @@ import org.springframework.context.ApplicationContext;
 public class StoreApplication {
 
     public static void main(String[] args) {
-//        ApplicationContext context  =  SpringApplication.run(StoreApplication.class, args);
-        var user = User.builder()
-                .name("John")
-                .password("password")
-                .email("john@ecample.com")
-                .build();
+        ApplicationContext context  =  SpringApplication.run(StoreApplication.class, args);
+        var repository = context.getBean(UserService.class);
 
-        var profile = Profile.builder()
-                .bio("bio")
-                .build();
+        repository.manageProducts();
 
-        user.setProfile(profile);
-        profile.setUser(user);
-        System.out.println(user);
     }
 }
-// 4.7.4
+// 4.8.2
