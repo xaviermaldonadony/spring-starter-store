@@ -127,7 +127,12 @@ public class UserService {
 //        userRepository.save(user);
 
         // step 4, delete one product, it should als remove from users wishlist
-        productRepository.deleteById(4L);
+//        productRepository.deleteById(4L);
+    }
+
+    @Transactional
+    public void updateProductPrices(){
+        productRepository.updatePriceByCategory(BigDecimal.valueOf(10), (byte)1 );
     }
 
 }
