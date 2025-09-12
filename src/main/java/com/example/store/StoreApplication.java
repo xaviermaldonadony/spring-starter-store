@@ -14,8 +14,8 @@ public class StoreApplication {
         ApplicationContext context  =  SpringApplication.run(StoreApplication.class, args);
         var repository = context.getBean(UserService.class);
 
-        repository.updateProductPrices();
+        repository.fetchProducts();
 
     }
 }
-// 4.8.2
+// 4.9.3
