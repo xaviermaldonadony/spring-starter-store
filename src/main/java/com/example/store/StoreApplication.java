@@ -14,8 +14,8 @@ public class StoreApplication {
         ApplicationContext context  =  SpringApplication.run(StoreApplication.class, args);
         var repository = context.getBean(UserService.class);
 
-        repository.fetchProducts();
+        repository.printLoyalProfiles();
 
     }
 }
-// 4.9.3
+// 4.9.6

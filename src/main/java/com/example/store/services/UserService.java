@@ -1,8 +1,6 @@
 package com.example.store.services;
 
 import com.example.store.entities.Address;
-import com.example.store.entities.Category;
-import com.example.store.entities.Product;
 import com.example.store.entities.User;
 import com.example.store.repositories.*;
 import jakarta.persistence.EntityManager;
@@ -135,9 +133,32 @@ public class UserService {
         productRepository.updatePriceByCategory(BigDecimal.valueOf(10), (byte)1 );
     }
 
+    @Transactional
     public void fetchProducts(){
-        var products = productRepository.findByCategory(new Category((byte) 1));
+        var products = productRepository.findProducts(BigDecimal.valueOf( 1), BigDecimal.valueOf( 15));
         products.forEach(System.out::println);
     }
+
+    @Transactional
+    public void fetchUser(){
+        var user = userRepository.findByEmail("john.smith@example.com").orElseThrow();
+        System.out.println(user);
+    }
+
+    @Transactional
+    public void fetchUsers(){
+        var users = userRepository.findAllWithAddresses();
+        users.forEach( u -> {
+            System.out.println(u);
+            u.getAddresses().forEach(System.out::println);
+        }
+        );
+    }
+
+    @Transactional
+     public void printLoyalProfiles(){
+        var users = userRepository.findLoyalProfiles(2);
+        users.forEach(p -> System.out.println(p.getId()+ ": " + p.getEmail()));
+     }
 
 }
