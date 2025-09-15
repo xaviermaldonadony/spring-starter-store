@@ -16,10 +16,8 @@ public class StoreApplication {
         ApplicationContext context  =  SpringApplication.run(StoreApplication.class, args);
         var repository = context.getBean(UserService.class);
 
-        repository.fetchProductsBySpecifications("prod", BigDecimal.valueOf(1), null);
-
-
-
+        repository.fetchSortedProducts();
+        repository.fetchPaginatedProducts(0, 10);
     }
 }
 // 4.9.6
