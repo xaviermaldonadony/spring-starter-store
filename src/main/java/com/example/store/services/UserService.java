@@ -1,11 +1,14 @@
 package com.example.store.services;
 
 import com.example.store.entities.Address;
+import com.example.store.entities.Product;
 import com.example.store.entities.User;
 import com.example.store.repositories.*;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -23,66 +26,67 @@ public class UserService {
 
 
     @Transactional
-    public void showEntityStates () {
+    public void showEntityStates() {
         var user = User.builder()
                 .name("John").
                 email("john@email.com")
                 .password("password").
                 build();
-        if(entityManager.contains(user) ){
+        if (entityManager.contains(user)) {
             System.out.println("Persistent");
-        }else{
+        } else {
             System.out.println("Transient / Detached");
         }
 
         userRepository.save(user);
 
-        if(entityManager.contains(user) ){
+        if (entityManager.contains(user)) {
             System.out.println("Persistent");
-        }else{
+        } else {
             System.out.println("Transient / Detached");
         }
     }
-//    public  void showRelatedEntities(){
+
+    //    public  void showRelatedEntities(){
 //        var user = userRepository.findById(2L).orElseThrow();
 //        System.out.println(user.getEmail());
 //    }
     @Transactional
-    public  void showRelatedEntities(){
+    public void showRelatedEntities() {
         var profile = profileRepository.findById(2L).orElseThrow();
         System.out.println(profile.getUser().getEmail());
     }
 
-    public void fetchAddress(){
-    var address = addressRepository.findById(1L).orElseThrow();
+    public void fetchAddress() {
+        var address = addressRepository.findById(1L).orElseThrow();
         System.out.println(address.getState());
     }
 
-    public void persistRelated(){
-       var user = User.builder()
-               .name("John Doe")
-               .email("john.doe@example.com")
-               .password("password")
-               .build();
+    public void persistRelated() {
+        var user = User.builder()
+                .name("John Doe")
+                .email("john.doe@example.com")
+                .password("password")
+                .build();
 
-       var address = Address.builder()
-               .street("street")
-               .state("state")
-               .city("city")
-               .zip("zip")
-               .build();
+        var address = Address.builder()
+                .street("street")
+                .state("state")
+                .city("city")
+                .zip("zip")
+                .build();
 
-       user.addAddress(address);
+        user.addAddress(address);
 
-       userRepository.save(user);
+        userRepository.save(user);
     }
 
-    public void deletedRelated(){
+    public void deletedRelated() {
 //       userRepository.deleteById(7L);
     }
 
     @Transactional
-    public void deleteRelatedChild(){
+    public void deleteRelatedChild() {
 
         var user = userRepository.findById(4L).orElseThrow();
         var address = user.getAddresses().getFirst();
@@ -92,7 +96,7 @@ public class UserService {
     }
 
     @Transactional
-    public void manageProducts(){
+    public void manageProducts() {
         // step 1
 
 //        var category = new Category("Category 1");
@@ -129,36 +133,46 @@ public class UserService {
     }
 
     @Transactional
-    public void updateProductPrices(){
-        productRepository.updatePriceByCategory(BigDecimal.valueOf(10), (byte)1 );
+    public void updateProductPrices() {
+        productRepository.updatePriceByCategory(BigDecimal.valueOf(10), (byte) 1);
     }
 
     @Transactional
-    public void fetchProducts(){
-        var products = productRepository.findProducts(BigDecimal.valueOf( 1), BigDecimal.valueOf( 15));
+    public void fetchProducts() {
+        var product = new Product();
+        product.setName("product ");
+
+        var matcher = ExampleMatcher
+                .matching()
+                .withIncludeNullValues()
+                .withIgnorePaths("id", "description")
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+        var example = Example.of(product, matcher);
+        var products = productRepository.findAll(example);
+
         products.forEach(System.out::println);
     }
 
     @Transactional
-    public void fetchUser(){
+    public void fetchUser() {
         var user = userRepository.findByEmail("john.smith@example.com").orElseThrow();
         System.out.println(user);
     }
 
     @Transactional
-    public void fetchUsers(){
+    public void fetchUsers() {
         var users = userRepository.findAllWithAddresses();
-        users.forEach( u -> {
-            System.out.println(u);
-            u.getAddresses().forEach(System.out::println);
-        }
+        users.forEach(u -> {
+                    System.out.println(u);
+                    u.getAddresses().forEach(System.out::println);
+                }
         );
     }
 
     @Transactional
-     public void printLoyalProfiles(){
+    public void printLoyalProfiles() {
         var users = userRepository.findLoyalProfiles(2);
-        users.forEach(p -> System.out.println(p.getId()+ ": " + p.getEmail()));
-     }
+        users.forEach(p -> System.out.println(p.getId() + ": " + p.getEmail()));
+    }
 
 }
